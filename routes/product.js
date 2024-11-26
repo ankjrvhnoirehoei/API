@@ -118,6 +118,9 @@ router.get("/findName", async function (req, res) {
                 }else{  //main activity goes here
                     try {
                         const {name} = req.query;
+                        if (!name) {
+                            return res.status(400).json({ status: false, message: "Product name is required" });
+                        }
                         var list = await productModels.find({proName: {$eq: name}});
                         res.json(list);
                     } catch (error) {
