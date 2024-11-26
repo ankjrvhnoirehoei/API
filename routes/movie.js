@@ -147,42 +147,47 @@ router.delete("/delete/title/:title", async function (req, res) {
 });
 
 // 6. 
-router.put("/edit", async function (req, res) { 
-    const authHeader = req.header("Authorization"); // define authHeader
+router.put("/edit/:id", async function (req, res) {
+    const authHeader = req.header("Authorization"); 
     if (authHeader && authHeader.startsWith("Bearer ")) {
-        const token = req.header("Authorization").split (' ')[1];
-        if(token){
-            JWT.verify(token, config.SECRETKEY, async function (err, id){
-                if(err){
-                    res.status(403).json({"status": 403, "err": err});
-                }else{  // main activity goes here
+        const token = req.header("Authorization").split(' ')[1];
+        if (token) {
+            JWT.verify(token, config.SECRETKEY, async function (err, id) {
+                if (err) {
+                    res.status(403).json({ "status": 403, "err": err });
+                } else {
                     try {
-                        const {movieID, title, totalRating, description, publisher, price, genre} = req.body;
-                        const findMovie = await movieModels.findOne({movieID});
+                        // Get movieID from URL parameter instead of the request body
+                        const {movieID} = req.params;
+                        const {title, views, totalRating, description, publisher, price, genre, totalComment} = req.body;
+                        const findMovie = await movieModels.findOne({ movieID });
                         if (findMovie) {
                             findMovie.title = title ? title : findMovie.title;
+                            findMovie.views = views ? views : findMovie.views;
                             findMovie.totalRating = totalRating ? totalRating : findMovie.totalRating;
                             findMovie.description = description ? description : findMovie.description;
                             findMovie.publisher = publisher ? publisher : findMovie.publisher;
                             findMovie.price = price ? price : findMovie.price;
                             findMovie.genre = genre ? genre : findMovie.genre;
+                            findMovie.totalComment = totalComment ? totalComment : findMovie.totalComment;
                             await findMovie.save();
-                            res.status(200).json({status: true, message: "movie updated"});
+                            res.status(200).json({ status: true, message: "movie updated" });
                         } else {
-                            res.status(400).json({status: false, message: "no such movie exists"});
+                            res.status(400).json({ status: false, message: "no such movie exists" });
                         }
                     } catch (error) {
-                        res.status(400).json({status: false, message: "an error has occured - " + error});
+                        res.status(400).json({ status: false, message: "an error has occurred - " + error });
                     }
                 }
             });
-        } else{
-            res.status(401).json({status: 401, message: "Token is missing"});
+        } else {
+            res.status(401).json({ status: 401, message: "Token is missing" });
         }
     } else {
-        res.status(401).json({status: 401, message: "Authorization header missing or malformed"});
+        res.status(401).json({ status: 401, message: "Authorization header missing or malformed" });
     }
 });
+
 
 // 7.
 router.post("/add", async function (req, res) {
