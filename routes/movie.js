@@ -100,7 +100,7 @@ router.get("/findBetween", async function (req, res) {
                 }else{  // main activity goes here
                     try {
                         const {minVal, maxVal} = req.query;
-                        var list = await movieModels.find({publisher: {$gte: minVal, $lte: maxVal}});
+                        var list = await movieModels.find({price: {$gte: minVal, $lte: maxVal}});
                         res.status(200).json(list);
                     } catch (error) {
                         res.json({status: false, message: "an error has occured"});
@@ -158,7 +158,7 @@ router.put("/edit", async function (req, res) {
                 }else{  // main activity goes here
                     try {
                         const {movieID, title, totalRating, description, publisher, price, genre} = req.body;
-                        const findMovie = await movieModels.findById({movieID});
+                        const findMovie = await movieModels.findOne({movieID});
                         if (findMovie) {
                             findMovie.title = title ? title : findMovie.title;
                             findMovie.totalRating = totalRating ? totalRating : findMovie.totalRating;
