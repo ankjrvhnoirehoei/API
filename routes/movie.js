@@ -148,7 +148,7 @@ router.delete("/delete/title/:title", async function (req, res) {
 
 // 6. 
 router.put("/edit/:id", async function (req, res) {
-    const authHeader = req.header("Authorization"); 
+    const authHeader = req.header("Authorization");
     if (authHeader && authHeader.startsWith("Bearer ")) {
         const token = req.header("Authorization").split(' ')[1];
         if (token) {
@@ -158,9 +158,12 @@ router.put("/edit/:id", async function (req, res) {
                 } else {
                     try {
                         // Get movieID from URL parameter instead of the request body
-                        const {movieID} = req.params;
+                        const {id} = req.params; // Extract the ID from the URL params
                         const {title, views, totalRating, description, publisher, price, genre, totalComment} = req.body;
-                        const findMovie = await movieModels.findOne({ movieID });
+                        
+                        // Find the movie using the correct movieID
+                        const findMovie = await movieModels.findOne({ movieID: id });
+                        
                         if (findMovie) {
                             findMovie.title = title ? title : findMovie.title;
                             findMovie.views = views ? views : findMovie.views;
@@ -187,6 +190,7 @@ router.put("/edit/:id", async function (req, res) {
         res.status(401).json({ status: 401, message: "Authorization header missing or malformed" });
     }
 });
+
 
 
 // 7.
