@@ -116,7 +116,7 @@ router.get("/findBetween", async function (req, res) {
 });
 
 // 5.
-router.delete("/delete/title/:title", async function (req, res) {
+router.delete("/delete/movieID/:movieID", async function (req, res) {
     const authHeader = req.header("Authorization"); // define authHeader
     if (authHeader && authHeader.startsWith("Bearer ")) {
         const token = req.header("Authorization").split (' ')[1];
@@ -126,8 +126,8 @@ router.delete("/delete/title/:title", async function (req, res) {
                     res.status(403).json({"status": 403, "err": err});
                 }else{  // main activity goes here
                     try {
-                        const {title} = req.params; // Get the title from the URL
-                        const movie = await movieModels.findOneAndDelete({title});
+                        const {movieID} = req.params; // Get the movieID from the URL
+                        const movie = await movieModels.findOneAndDelete({movieID});
                         if (movie) {
                             res.status(200).json({ status: true, message: "Movie deleted" });
                         } else {
