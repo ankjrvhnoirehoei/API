@@ -244,7 +244,7 @@ router.get("/findTitle-publisher-genre", async function (req, res) {
 });
 
 // 9.
-router.delete("/sortByPrice", async function (req, res) {
+router.get("/sortByPrice", async function (req, res) {
     const authHeader = req.header("Authorization"); //define authHeader
     if (authHeader && authHeader.startsWith("Bearer ")) {
         const token = req.header("Authorization").split (' ')[1];
@@ -270,7 +270,7 @@ router.delete("/sortByPrice", async function (req, res) {
 });
 
 // 10.
-router.delete("/topOfGenre", async function (req, res) {
+router.get("/topOfGenre", async function (req, res) {
     const authHeader = req.header("Authorization"); //define authHeader
     if (authHeader && authHeader.startsWith("Bearer ")) {
         const token = req.header("Authorization").split (' ')[1];
